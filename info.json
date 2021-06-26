@@ -1,0 +1,11 @@
+{
+  "name": "skip-hours",
+  "version": "1.0.0",
+  "factorio_version": "1.1",
+  "title": "Skip N hours",
+  "author": "ZwerOxotnik",
+  "contact": "zweroxotnik@gmail.com, discord:ZwerOxotnik#7117",
+	"homepage": "https://reddit.com/r/ZwerOxotnik",
+  "dependencies": [],
+  "description": "This mod adds start items to save your time etc (doesn't affect technologies)\n\nIf this mod will be popular then I'll add new features."
+}
