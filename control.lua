@@ -2,9 +2,11 @@
 if script.level.campaign_name then return end
 if script.level.level_name == "sandbox" then return end
 if script.level.level_name == "pvp" then return end
+if script.level.level_name == "team-production" then return end
+if script.level.level_name == "rocket-rush" then return end
+if script.level.level_name == "wave-defence" then return end
 if remote.interfaces["disable-" .. script.level.mod_name] then return end
 
---TODO: optimize validation of start items
 
 local multiplier = settings.global["sh-item-multiplier"].value
 local hours = settings.global["sh-hours"].value
@@ -186,7 +188,7 @@ local function on_game_created_from_freeplay()
 	if not (surface and surface.valid) then return end
 
 	local neutral_force = game.forces["neutral"]
-	local container_name, position, target
+	local container_name, position
 	local target = surface.find_entities_filtered{position = {0, 0}, radius = 100, name = "crash-site-spaceship", type = "container"}[1]
 	if target and target.valid then
 		container_name = target.name
@@ -224,12 +226,26 @@ local function on_game_created_from_freeplay()
 end
 
 local function on_player_created_straight(event)
-	local player = game.get_player(event.player_index)
-	if not (player and player.valid) then return end
+	local target = game.get_player(event.player_index)
+	if not (target and target.valid) then return end
 
+	local position = target.position
+	local neutral_force = game.forces["neutral"]
+	local surface = target.surface
 	for _, item in pairs(start_items) do
 		if game.item_prototypes[item[1]] then
-			player.insert{name = item[1], count = item[2]}
+			local items = {name = item[1], count = item[2]}
+			if target.can_insert(items) then
+				target.insert(items) -- TODO: check inserted count of items
+			else
+				container_name = find_chest() -- this is dirty
+				position = surface.find_non_colliding_position(container_name, position, 30, 1)
+				if position == nil then
+					log("Can't find non colliding position for " .. container_name)
+					return
+				end
+				target = surface.create_entity{name = container_name, position = position, force = neutral_force, create_build_effect_smoke = false}
+			end
 		end
 	end
 end
