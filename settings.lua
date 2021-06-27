@@ -5,7 +5,7 @@ data:extend({
 		name = "sh-hours",
 		setting_type = "runtime-global",
 		default_value = 2,
-		allowed_values = {0, 1, 2, 5, 10}
+		allowed_values = {0, 1, 2, 5, 8, 10}
 	},
 	{
 		type = "double-setting",

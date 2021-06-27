@@ -12,7 +12,7 @@ local multiplier = settings.global["sh-item-multiplier"].value
 local hours = settings.global["sh-hours"].value
 local ceil = math.ceil
 local start_items
-local start_armor
+local important_items
 local start_equipments
 
 
@@ -30,6 +30,7 @@ local function get_start_items()
 
 	start_items = {}
 	start_equipments = {}
+	important_items = {}
 
 	if hours >= 1 then
 		join(start_items, {
@@ -44,7 +45,6 @@ local function get_start_items()
 			{"transport-belt", 50},
 			{"underground-belt", 8},
 			{"splitter", 6},
-			{"firearm-magazine", 20},
 			{"small-electric-pole", 14},
 			{"electric-mining-drill", 8},
 			{"stone-furnace", 10},
@@ -59,20 +59,24 @@ local function get_start_items()
 			{"lab", 1},
 			{"radar", 1},
 			{"small-lamp", 10},
-			{"repair-pack", 10},
 			{"stone-wall", 60},
 		})
+		join(important_items, {
+			{"firearm-magazine", 20},
+			{"repair-pack", 10},
+			{"shotgun-shell", 8},
+		})
 		if hours == 1 then
-			start_items[#start_items+1] = {"shotgun", 1}
-			start_armor = "light-armor"
+			important_items[#important_items+1] = {"shotgun", 1}
+			join(important_items, {
+				{"shotgun-shell", 8},
+			})
 		end
 	end
 
 	if hours >= 2 then
 		join(start_items, {
 			{"medium-electric-pole", 5},
-			{"grenade", 10},
-			{"piercing-rounds-magazine", 10},
 			{"gate", 10},
 			{"steel-plate", 10},
 			{"rail", 150},
@@ -87,18 +91,23 @@ local function get_start_items()
 			{"fast-splitter", 6},
 			{"fast-inserter", 10},
 			{"filter-inserter", 5},
-			{"slowdown-capsule", 5},
-			{"poison-capsule", 5},
 			{"engine-unit", 6},
 			{"substation", 6},
 		})
-		start_items[#start_items+1] = {"submachine-gun", 1}
-		start_items[#start_items+1] = {"combat-shotgun", 1}
-		start_items[#start_items+1] = {"rocket-launcher", 1}
-		start_items[#start_items+1] = {"car", 1}
+		join(important_items, {
+			{"piercing-rounds-magazine", 10},
+			{"piercing-shotgun-shell", 8},
+			{"rocket", 8},
+		})
+		important_items[#important_items+1] = {"submachine-gun", 1}
+		important_items[#important_items+1] = {"combat-shotgun", 1}
+		important_items[#important_items+1] = {"rocket-launcher", 1}
+		important_items[#important_items+1] = {"car", 1}
+		important_items[#important_items+1] = {"grenade", 10}
+		important_items[#important_items+1] = {"slowdown-capsule", 5}
+		important_items[#important_items+1] = {"poison-capsule", 5}
 		if hours == 2 then
 			start_items[#start_items+1] = {"stone-brick", 1000}
-			start_armor = "heavy-armor"
 		end
 	else
 		return
@@ -110,19 +119,24 @@ local function get_start_items()
 			{"pumpjack", 3},
 			{"concrete", 1000},
 			{"advanced-circuit", 10},
-			{"land-mine", 10},
-			{"cluster-grenade", 10},
-			{"flamethrower-ammo", 10},
-			{"rocket-fuel", 5},
 			{"assembling-machine-2", 8},
 			{"oil-refinery", 1},
 			{"chemical-plant", 5},
 			{"steel-furnace", 10},
 			{"storage-tank", 3},
 		})
-		start_items[#start_items+1] = {"flamethrower", 1}
-		if hours == 5 then
-			start_armor = "modular-armor"
+		join(important_items, {
+			{"land-mine", 10},
+			{"cluster-grenade", 10},
+			{"flamethrower-ammo", 10},
+			{"rocket-fuel", 5},
+			{"cliff-explosives", 5},
+		})
+		important_items[#important_items+1] = {"flamethrower", 1}
+		start_equipments[#start_equipments+1] = {"night-vision-equipment", 1}
+		if hours >= 5 then
+			start_equipments[#start_equipments+1] = {"solar-panel-equipment", 4}
+			start_equipments[#start_equipments+1] = {"battery-equipment", 1}
 		end
 	else
 		return
@@ -142,33 +156,55 @@ local function get_start_items()
 			{"beacon", 4},
 			{"construction-robot", 12},
 		})
-		start_items[#start_items+1] = {"tank", 1}
-		start_equipments[#start_equipments+1] = {"night-vision-equipment", 1}
+		important_items[#important_items+1] = {"tank", 1}
 		if hours == 8 then
+			start_equipments[#start_equipments+1] = {"personal-roboport-equipment", 1}
 			start_equipments[#start_equipments+1] = {"fusion-reactor-equipment", 1}
-			start_armor = "power-armor"
 		end
 	else
 		return
 	end
 
 	if hours >= 10 then
-		join(start_items, {
+		join(important_items, {
 			{"nuclear-fuel", 1},
 			{"uranium-rounds-magazine", 15},
 		})
-		start_items[#start_items+1] = {"spidertron", 1}
+		important_items[#important_items+1] = {"spidertron", 1}
 		start_equipments[#start_equipments+1] = {"exoskeleton-equipment", 1}
-		start_equipments[#start_equipments+1] = {"personal-roboport-equipment", 1}
 		if hours == 10 then
+			start_equipments[#start_equipments+1] = {"personal-roboport-mk2-equipment", 1}
 			start_equipments[#start_equipments+1] = {"fusion-reactor-equipment", 2}
-			start_armor = "power-armor-mk2"
 		end
 	else
 		return
 	end
 end
 get_start_items()
+
+local function get_start_armor()
+	local start_armor
+	if hours >= 10 then
+		start_armor = "power-armor-mk2"
+		if game.item_prototypes[start_armor] then return start_armor end
+	end
+	if hours >= 8 then
+		start_armor = "power-armor"
+		if game.item_prototypes[start_armor] then return start_armor end
+	end
+	if hours >= 5 then
+		start_armor = "modular-armor"
+		if game.item_prototypes[start_armor] then return start_armor end
+	end
+	if hours >= 2 then
+		start_armor = "heavy-armor"
+		if game.item_prototypes[start_armor] then return start_armor end
+	end
+	if hours >= 1 then
+		start_armor = "light-armor"
+		if game.item_prototypes[start_armor] then return start_armor end
+	end
+end
 
 local function find_chest()
 	local chest_name = "steel-chest"
@@ -192,7 +228,7 @@ local function insert_items(target, all_items)
 			if target.can_insert(items) then
 				target.insert(items) -- TODO: check inserted count of items
 			else
-				container_name = find_chest() -- this is dirty
+				local container_name = find_chest() -- this is dirty
 				position = surface.find_non_colliding_position(container_name, position, 30, 1)
 				if position == nil then
 					log("Can't find non colliding position for " .. container_name)
@@ -201,9 +237,31 @@ local function insert_items(target, all_items)
 				target = surface.create_entity{name = container_name, position = position, force = neutral_force, create_build_effect_smoke = false}
 			end
 		else
-			log("\""..item[1].."\" doesn't exist in the game, please check spelling.")
+			log("\"" .. item[1] .. "\" doesn't exist in the game, please check spelling.")
 		end
 	end
+end
+
+local function insert_personal_items(player)
+	local start_armor = get_start_armor()
+	if start_armor then
+		local armor_inventory = player.get_inventory(defines.inventory.character_armor)
+		if armor_inventory.can_insert(start_armor) then
+			armor_inventory.insert(start_armor)
+			local armor_grid = armor_inventory.find_item_stack(start_armor).grid
+			if armor_grid and start_equipments then
+				for _, v in pairs(start_equipments) do
+					if game.item_prototypes[v[1]] then
+						for i=1, v[2], 1 do
+							armor_grid.put{name = v[1]}
+						end
+					end
+				end
+			end
+		end
+	end
+
+	insert_items(player, important_items)
 end
 
 
@@ -230,6 +288,13 @@ local function on_game_created_from_freeplay()
 
 	global.is_freeplay_game = true
 
+	local start_armor = get_start_armor()
+	if start_armor then
+		target.insert(start_armor)
+	end
+
+	insert_items(target, start_equipments)
+	insert_items(target, important_items)
 	insert_items(target, start_items)
 end
 
@@ -237,30 +302,19 @@ local function on_player_created_straight(event)
 	local player = game.get_player(event.player_index)
 	if not (player and player.valid) then return end
 
-	if start_armor and game.item_prototypes[start_armor] then
-		local armor_inventory = player.get_inventory(defines.inventory.character_armor)
-		if armor_inventory.can_insert(start_armor) then
-			armor_inventory.insert(start_armor)
-			local armor_grid = armor_inventory.find_item_stack(start_armor).grid
-			if start_equipments then
-				for _, v in pairs(start_equipments) do
-					if game.item_prototypes[v[1]] then
-						for i=1, v[2], 1 do
-							armor_grid.put{name = v[1]}
-						end
-					end
-				end
-			end
-		end
-	end
-
+	insert_personal_items(player)
 	insert_items(player, start_items)
 end
 
 ---@param event table
 local function on_freeplayer_created(event)
 	if hours == 0 then return end
-	if global.is_freeplay_game then return end
+	if global.is_freeplay_game then
+		local player = game.get_player(event.player_index)
+		if not (player and player.valid) then return end
+		insert_personal_items(player)
+		return
+	end
 	if global.is_init ~= true then
 		on_game_created_from_freeplay()
 		if global.is_freeplay_game then return end
@@ -282,10 +336,17 @@ local function on_runtime_mod_setting_changed(event)
 	end
 end
 
+function on_init()
+	if remote.interfaces["freeplay"] then
+		remote.call("freeplay", "set_skip_intro", true) -- Does it work?
+	end
+end
+
 
 script.on_event(defines.events.on_runtime_mod_setting_changed, on_runtime_mod_setting_changed)
 
 if script.level.level_name == "freeplay" then
+	script.on_init(on_init)
 	script.on_event(defines.events.on_player_created, on_freeplayer_created)
 else
 	script.on_event(defines.events.on_player_created, function(event)
