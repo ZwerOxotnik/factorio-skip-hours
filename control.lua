@@ -41,13 +41,13 @@ local function get_start_items()
 			{"electronic-circuit", 10},
 			{"iron-gear-wheel", 40},
 			{"iron-chest", 6},
-			{"inserter", 10},
-			{"transport-belt", 50},
-			{"underground-belt", 8},
-			{"splitter", 6},
+			{"inserter", 30},
+			{"transport-belt", 150},
+			{"underground-belt", 20},
+			{"splitter", 10},
 			{"small-electric-pole", 14},
 			{"electric-mining-drill", 8},
-			{"stone-furnace", 10},
+			{"stone-furnace", 15},
 			{"assembling-machine-1", 5},
 			{"pipe", 20},
 			{"pipe-to-ground", 2},
@@ -78,7 +78,7 @@ local function get_start_items()
 		join(start_items, {
 			{"medium-electric-pole", 5},
 			{"gate", 10},
-			{"steel-plate", 10},
+			{"steel-plate", 12},
 			{"rail", 150},
 			{"locomotive", 1},
 			{"cargo-wagon", 2},
@@ -86,22 +86,19 @@ local function get_start_items()
 			{"rail-chain-signal", 5},
 			{"train-stop", 2},
 			{"steel-chest", 5},
-			{"fast-transport-belt", 40},
-			{"fast-underground-belt", 8},
-			{"fast-splitter", 6},
-			{"fast-inserter", 10},
-			{"filter-inserter", 5},
+			{"long-handed-inserter", 20},
+			{"fast-transport-belt", 150},
+			{"fast-underground-belt", 20},
+			{"fast-splitter", 10},
 			{"engine-unit", 6},
 			{"substation", 6},
 		})
 		join(important_items, {
 			{"piercing-rounds-magazine", 10},
 			{"piercing-shotgun-shell", 8},
-			{"rocket", 8},
 		})
 		important_items[#important_items+1] = {"submachine-gun", 1}
 		important_items[#important_items+1] = {"combat-shotgun", 1}
-		important_items[#important_items+1] = {"rocket-launcher", 1}
 		important_items[#important_items+1] = {"car", 1}
 		important_items[#important_items+1] = {"grenade", 10}
 		important_items[#important_items+1] = {"slowdown-capsule", 5}
@@ -118,6 +115,8 @@ local function get_start_items()
 			{"big-electric-pole", 5},
 			{"pumpjack", 3},
 			{"concrete", 1000},
+			{"fast-inserter", 15},
+			{"filter-inserter", 8},
 			{"advanced-circuit", 10},
 			{"assembling-machine-2", 8},
 			{"oil-refinery", 1},
@@ -131,7 +130,9 @@ local function get_start_items()
 			{"flamethrower-ammo", 10},
 			{"rocket-fuel", 5},
 			{"cliff-explosives", 5},
+			{"rocket", 8},
 		})
+		important_items[#important_items+1] = {"rocket-launcher", 1}
 		important_items[#important_items+1] = {"flamethrower", 1}
 		start_equipments[#start_equipments+1] = {"night-vision-equipment", 1}
 		if hours >= 5 then
@@ -144,9 +145,9 @@ local function get_start_items()
 
 	if hours >= 8 then
 		join(start_items, {
-			{"express-transport-belt", 40},
-			{"express-underground-belt", 8},
-			{"express-splitter", 6},
+			{"express-transport-belt", 150},
+			{"express-underground-belt", 20},
+			{"express-splitter", 10},
 			{"processing-unit", 10},
 			{"electric-engine-unit", 6},
 			{"assembling-machine-3", 8},

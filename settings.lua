@@ -1,4 +1,3 @@
-
 data:extend({
 	{
 		type = "int-setting",
@@ -6,8 +5,7 @@ data:extend({
 		setting_type = "runtime-global",
 		default_value = 2,
 		allowed_values = {0, 1, 2, 5, 8, 10}
-	},
-	{
+	}, {
 		type = "double-setting",
 		name = "sh-item-multiplier",
 		setting_type = "runtime-global",

@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.1
+Date: 2021.07.19
+  Changes:
+    - Fast inserters, filter inserters, Rockets since 5th hour
+    - A little bit more steel plate, splitters
+    - Much more belts, underground belts
+    - More stone furnaces, inserters
+    - Added long handed inserters since 2nd hour
+---------------------------------------------------------------------------------------------------
 Version: 1.2.0
 Date: 2021.06.27
   Features:
