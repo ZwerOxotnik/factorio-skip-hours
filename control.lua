@@ -220,7 +220,7 @@ local function find_chest()
 end
 
 local function insert_items(target, all_items)
-	local position = target.position
+	local init_position = target.position
 	local neutral_force = game.forces.neutral
 	local surface = target.surface
 	local items = {name = '', count = 0}
@@ -234,7 +234,7 @@ local function insert_items(target, all_items)
 					items.count = items.count - inserted_count
 				else
 					local container_name = find_chest() -- this is dirty
-					position = surface.find_non_colliding_position(container_name, position, 30, 1)
+					local position = surface.find_non_colliding_position(container_name, init_position, 100, 1.5)
 					if position == nil then
 						log("Can't find non colliding position for " .. container_name)
 						return
