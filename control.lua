@@ -221,21 +221,26 @@ end
 
 local function insert_items(target, all_items)
 	local position = target.position
-	local neutral_force = game.forces["neutral"]
+	local neutral_force = game.forces.neutral
 	local surface = target.surface
+	local items = {name = '', count = 0}
 	for _, item in pairs(all_items) do
 		if game.item_prototypes[item[1]] then
-			local items = {name = item[1], count = item[2]}
-			if target.can_insert(items) then
-				target.insert(items) -- TODO: check inserted count of items
-			else
-				local container_name = find_chest() -- this is dirty
-				position = surface.find_non_colliding_position(container_name, position, 30, 1)
-				if position == nil then
-					log("Can't find non colliding position for " .. container_name)
-					return
+			items.name = item[1]
+			items.count = item[2]
+			while items.count > 0 do
+				local inserted_count = target.insert(items)
+				if inserted_count > 0 then
+					items.count = items.count - inserted_count
+				else
+					local container_name = find_chest() -- this is dirty
+					position = surface.find_non_colliding_position(container_name, position, 30, 1)
+					if position == nil then
+						log("Can't find non colliding position for " .. container_name)
+						return
+					end
+					target = surface.create_entity{name = container_name, position = position, force = neutral_force, create_build_effect_smoke = false}
 				end
-				target = surface.create_entity{name = container_name, position = position, force = neutral_force, create_build_effect_smoke = false}
 			end
 		else
 			log("\"" .. item[1] .. "\" doesn't exist in the game, please check spelling.")
