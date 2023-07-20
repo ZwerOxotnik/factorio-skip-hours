@@ -63,8 +63,8 @@ Adds more start items to save your time, patience etc (doesn't affect technologi
 If you want to download from this source, then use commands below (requires [git](https://git-scm.com/downloads)).
 
 ```bash
-git clone --recurse-submodules -j8 https://github.com/ZwerOxotnik/factorio-skip-hours
-cd example-mod
+git clone --recurse-submodules -j8 https://github.com/ZwerOxotnik/factorio-skip-hours skip-hours
+cd skip-hours
 ```
 
 [Contributing](/CONTRIBUTING.md)
