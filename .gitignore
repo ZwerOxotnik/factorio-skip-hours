@@ -165,3 +165,9 @@ coverage.xml
 .pydevproject
 # Sphinx documentation
 docs/_build
+
+# lua2p debug files
+*.meta.lua
+
+# Factorio API files
+.vscode/factorio/*
