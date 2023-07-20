@@ -79,6 +79,6 @@ Alternatively, join the [Discord group](https://discordapp.com/invite/YyJVUCa) a
 License
 -------
 
-This project is copyright © 2021 ZwerOxotnik \<zweroxotnik@gmail.com\>.
+This project is copyright © 2021, 2023 ZwerOxotnik \<zweroxotnik@gmail.com\>.
 
 Use of the source code included here is governed by the Apache License, Version 2.0. See the [LICENSE](/LICENSE) file for details.

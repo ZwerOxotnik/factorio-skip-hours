@@ -8,8 +8,15 @@ if script.level.level_name == "wave-defence" then return end
 if remote.interfaces["disable-" .. script.level.mod_name] then return end
 
 
+local M = {}
+
+
+local force_util = require("zk-static-lib/lualibs/control_stage/force-util")
+
+
 local multiplier = settings.global["sh-item-multiplier"].value
 local hours = settings.global["sh-hours"].value
+---@cast hours number
 local ceil = math.ceil
 local start_items
 local important_items
@@ -18,64 +25,81 @@ local start_equipments
 
 ---@param to table
 ---@param from table
-local function join(to, from)
+local function join_with_multiplier(to, from)
 	for _, value in pairs(from) do
 		to[#to+1] = {value[1], ceil(value[2] * multiplier)}
 	end
 end
 
----@return table
 local function get_start_items()
-	if hours == 0 then return {} end
-
 	start_items = {}
 	start_equipments = {}
 	important_items = {}
 
+	if script.active_mods.IndustrialRevolution3 then return end -- temporary
+	if hours == 0 then return end
+
 	if hours >= 1 then
-		join(start_items, {
-			{"iron-plate", 55},
+		join_with_multiplier(start_items, {
 			{"coal", 40},
 			{"wood", 40},
 			{"copper-plate", 25},
-			{"electronic-circuit", 10},
-			{"iron-gear-wheel", 40},
-			{"iron-chest", 6},
-			{"inserter", 30},
 			{"transport-belt", 150},
 			{"underground-belt", 20},
 			{"splitter", 10},
 			{"small-electric-pole", 14},
-			{"electric-mining-drill", 8},
 			{"stone-furnace", 15},
 			{"assembling-machine-1", 5},
-			{"pipe", 20},
-			{"pipe-to-ground", 2},
 			{"stone", 50},
 			{"wooden-chest", 5},
-			{"steam-engine", 4},
-			{"boiler", 2},
 			{"offshore-pump", 1},
-			{"lab", 1},
-			{"radar", 1},
 			{"small-lamp", 10},
-			{"stone-wall", 60},
 		})
-		join(important_items, {
-			{"firearm-magazine", 20},
-			{"repair-pack", 10},
+		join_with_multiplier(important_items, {
 			{"shotgun-shell", 8},
 		})
+		if not script.active_mods.IndustrialRevolution3 then
+			join_with_multiplier(start_items, {
+				{"radar", 1},
+				{"pipe", 20},
+				{"pipe-to-ground", 2},
+				{"boiler", 2},
+				{"iron-chest", 6},
+				{"inserter", 30},
+				{"iron-plate", 55},
+				{"steam-engine", 4},
+				{"electronic-circuit", 10},
+				{"iron-gear-wheel", 40},
+				{"stone-wall", 60},
+				{"lab", 1},
+			})
+			join_with_multiplier(important_items, {
+				{"firearm-magazine", 20},
+				{"repair-pack", 10},
+			})
+		end
 		if hours == 1 then
 			important_items[#important_items+1] = {"shotgun", 1}
-			join(important_items, {
+			join_with_multiplier(important_items, {
 				{"shotgun-shell", 8},
 			})
+
+			if script.active_mods.IndustrialRevolution3 then
+				join_with_multiplier(start_items, {
+					{"small-assembler-1", 10},
+					{"copper-lab", 1},
+				})
+			end
 		end
 	end
 
 	if hours >= 2 then
-		join(start_items, {
+		if not script.active_mods.IndustrialRevolution3 then
+			join_with_multiplier(start_items, {
+				{"electric-mining-drill", 8},
+			})
+		end
+		join_with_multiplier(start_items, {
 			{"medium-electric-pole", 5},
 			{"gate", 10},
 			{"steel-plate", 12},
@@ -93,7 +117,7 @@ local function get_start_items()
 			{"engine-unit", 6},
 			{"substation", 6},
 		})
-		join(important_items, {
+		join_with_multiplier(important_items, {
 			{"piercing-rounds-magazine", 10},
 			{"piercing-shotgun-shell", 8},
 		})
@@ -111,7 +135,7 @@ local function get_start_items()
 	end
 
 	if hours >= 5 then
-		join(start_items, {
+		join_with_multiplier(start_items, {
 			{"big-electric-pole", 5},
 			{"pumpjack", 3},
 			{"concrete", 1000},
@@ -124,7 +148,7 @@ local function get_start_items()
 			{"steel-furnace", 10},
 			{"storage-tank", 3},
 		})
-		join(important_items, {
+		join_with_multiplier(important_items, {
 			{"land-mine", 10},
 			{"cluster-grenade", 10},
 			{"flamethrower-ammo", 10},
@@ -144,7 +168,7 @@ local function get_start_items()
 	end
 
 	if hours >= 8 then
-		join(start_items, {
+		join_with_multiplier(start_items, {
 			{"express-transport-belt", 150},
 			{"express-underground-belt", 20},
 			{"express-splitter", 10},
@@ -167,7 +191,7 @@ local function get_start_items()
 	end
 
 	if hours >= 10 then
-		join(important_items, {
+		join_with_multiplier(important_items, {
 			{"nuclear-fuel", 1},
 			{"uranium-rounds-magazine", 15},
 		})
@@ -183,6 +207,47 @@ local function get_start_items()
 end
 get_start_items()
 
+
+---@param force LuaForce
+---@param hours number
+function M.research_techs(force, hours)
+	if hours == 0 then return end
+	if script.active_mods.IndustrialRevolution3 then return end
+
+	local tech_items = {}
+	local max_research_unit_count = 100
+	local item_prototypes = game.item_prototypes
+	local function add_to_tech_items(item_name)
+		if item_prototypes[item_name] then
+			tech_items[#tech_items+1] = item_name
+		end
+	end
+	if hours >= 1 then
+		add_to_tech_items("automation-science-pack")
+	end
+	if hours >= 2 then
+		add_to_tech_items("logistic-science-pack")
+		max_research_unit_count = 250
+	end
+	if hours >= 5 then
+		add_to_tech_items("military-science-pack")
+		add_to_tech_items("chemical-science-pack")
+		max_research_unit_count = 510
+	end
+	if hours >= 8 then
+		add_to_tech_items("production-science-pack")
+		max_research_unit_count = 1100
+	end
+	if hours >= 10 then
+		add_to_tech_items("utility-science-pack")
+		max_research_unit_count = 1300
+	end
+
+	force_util.research_enabled_techs_by_items(force, tech_items, max_research_unit_count)
+end
+
+
+---@return string?
 local function get_start_armor()
 	local start_armor
 	if hours >= 10 then
@@ -207,6 +272,8 @@ local function get_start_armor()
 	end
 end
 
+
+---@return string?
 local function find_chest()
 	local chest_name = "steel-chest"
 	if game.entity_prototypes[chest_name] then return chest_name end
@@ -219,6 +286,9 @@ local function find_chest()
 	end
 end
 
+
+---@param target LuaEntity|LuaPlayer
+---@param all_items table<any, table>
 local function insert_items(target, all_items)
 	local init_position = target.position
 	local neutral_force = game.forces.neutral
@@ -248,25 +318,31 @@ local function insert_items(target, all_items)
 	end
 end
 
+
+---@param player LuaPlayer
 local function insert_personal_items(player)
 	local start_armor = get_start_armor()
 	if start_armor then
+		local item_prototypes = game.item_prototypes
 		local armor_inventory = player.get_inventory(defines.inventory.character_armor)
-		if armor_inventory.can_insert(start_armor) then
-			armor_inventory.insert(start_armor)
-			local armor_grid = armor_inventory.find_item_stack(start_armor).grid
-			if armor_grid and start_equipments then
-				for _, v in pairs(start_equipments) do
-					if game.item_prototypes[v[1]] then
-						for i=1, v[2], 1 do
-							armor_grid.put{name = v[1]}
-						end
-					end
+		if not (armor_inventory and armor_inventory.valid and armor_inventory.can_insert(start_armor)) then
+			goto skip
+		end
+		armor_inventory.insert(start_armor)
+		local armor_grid = armor_inventory.find_item_stack(start_armor).grid
+		if not (armor_grid and armor_grid.valid and start_equipments) then
+			goto skip
+		end
+		for _, v in pairs(start_equipments) do
+			if item_prototypes[v[1]] then
+				for _=1, v[2], 1 do
+					armor_grid.put{name = v[1]}
 				end
 			end
 		end
 	end
 
+	:: skip ::
 	insert_items(player, important_items)
 end
 
@@ -275,6 +351,9 @@ local function on_game_created_from_freeplay()
 	global.is_init = true
 	local surface = game.get_surface(1)
 	if not (surface and surface.valid) then return end
+
+	M.research_techs(game.forces.player, hours)
+	if script.active_mods.IndustrialRevolution3 then return end -- temporary
 
 	local neutral_force = game.forces["neutral"]
 	local container_name, position
@@ -304,6 +383,8 @@ local function on_game_created_from_freeplay()
 	insert_items(target, start_items)
 end
 
+
+---@param event EventData.on_player_created
 local function on_player_created_straight(event)
 	local player = game.get_player(event.player_index)
 	if not (player and player.valid) then return end
@@ -312,7 +393,8 @@ local function on_player_created_straight(event)
 	insert_items(player, start_items)
 end
 
----@param event table
+
+---@param event EventData.on_player_created
 local function on_freeplayer_created(event)
 	if hours == 0 then return end
 	if global.is_freeplay_game then
@@ -329,6 +411,8 @@ local function on_freeplayer_created(event)
 	on_player_created_straight(event)
 end
 
+
+---@param event EventData.on_runtime_mod_setting_changed
 local function on_runtime_mod_setting_changed(event)
 	if event.setting_type ~= "runtime-global" then return end
 
@@ -360,3 +444,6 @@ else
 		on_player_created_straight(event)
 	end)
 end
+
+
+return M
