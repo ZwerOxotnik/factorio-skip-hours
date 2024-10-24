@@ -216,7 +216,7 @@ function M.research_techs(force, hours)
 
 	local tech_items = {}
 	local max_research_unit_count = 100
-	local item_prototypes = game.item_prototypes
+	local item_prototypes = prototypes.item
 	local function add_to_tech_items(item_name)
 		if item_prototypes[item_name] then
 			tech_items[#tech_items+1] = item_name
@@ -252,23 +252,23 @@ local function get_start_armor()
 	local start_armor
 	if hours >= 10 then
 		start_armor = "power-armor-mk2"
-		if game.item_prototypes[start_armor] then return start_armor end
+		if prototypes.item[start_armor] then return start_armor end
 	end
 	if hours >= 8 then
 		start_armor = "power-armor"
-		if game.item_prototypes[start_armor] then return start_armor end
+		if prototypes.item[start_armor] then return start_armor end
 	end
 	if hours >= 5 then
 		start_armor = "modular-armor"
-		if game.item_prototypes[start_armor] then return start_armor end
+		if prototypes.item[start_armor] then return start_armor end
 	end
 	if hours >= 2 then
 		start_armor = "heavy-armor"
-		if game.item_prototypes[start_armor] then return start_armor end
+		if prototypes.item[start_armor] then return start_armor end
 	end
 	if hours >= 1 then
 		start_armor = "light-armor"
-		if game.item_prototypes[start_armor] then return start_armor end
+		if prototypes.item[start_armor] then return start_armor end
 	end
 end
 
@@ -276,10 +276,10 @@ end
 ---@return string?
 local function find_chest()
 	local chest_name = "steel-chest"
-	if game.entity_prototypes[chest_name] then return chest_name end
+	if prototypes.entity[chest_name] then return chest_name end
 	log("Starting chest " .. chest_name .. " is not a valid entity prototype, picking a new container from prototype list")
 
-	for name, chest in pairs(game.entity_prototypes) do
+	for name, chest in pairs(prototypes.entity) do
 		if chest.type == "container" then
 			return name
 		end
@@ -295,7 +295,7 @@ local function insert_items(target, all_items)
 	local surface = target.surface
 	local items = {name = '', count = 0}
 	for _, item in pairs(all_items) do
-		if game.item_prototypes[item[1]] then
+		if prototypes.item[item[1]] then
 			items.name = item[1]
 			items.count = item[2]
 			while items.count > 0 do
@@ -323,7 +323,7 @@ end
 local function insert_personal_items(player)
 	local start_armor = get_start_armor()
 	if start_armor then
-		local item_prototypes = game.item_prototypes
+		local item_prototypes = prototypes.item
 		local armor_inventory = player.get_inventory(defines.inventory.character_armor)
 		if not (armor_inventory and armor_inventory.valid and armor_inventory.can_insert(start_armor)) then
 			goto skip
@@ -348,7 +348,7 @@ end
 
 
 local function on_game_created_from_freeplay()
-	global.is_init = true
+	storage.is_init = true
 	local surface = game.get_surface(1)
 	if not (surface and surface.valid) then return end
 
@@ -371,7 +371,7 @@ local function on_game_created_from_freeplay()
 		target = surface.create_entity{name = container_name, position = position, force = neutral_force, create_build_effect_smoke = false}
 	end
 
-	global.is_freeplay_game = true
+	storage.is_freeplay_game = true
 
 	local start_armor = get_start_armor()
 	if start_armor then
@@ -397,15 +397,15 @@ end
 ---@param event EventData.on_player_created
 local function on_freeplayer_created(event)
 	if hours == 0 then return end
-	if global.is_freeplay_game then
+	if storage.is_freeplay_game then
 		local player = game.get_player(event.player_index)
 		if not (player and player.valid) then return end
 		insert_personal_items(player)
 		return
 	end
-	if global.is_init ~= true then
+	if storage.is_init ~= true then
 		on_game_created_from_freeplay()
-		if global.is_freeplay_game then return end
+		if storage.is_freeplay_game then return end
 	end
 
 	on_player_created_straight(event)

@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.0
+Date: 2024-10-24
+  Changes:
+    - Updated for Factorio 2.0
+  Locale:
+    - Added Catalan translation (thanks to @badall on crowdin)
+    - Translations: https://crowdin.com/project/factorio-mods-localization (thank you for contributions, I really appreciate it)
+---------------------------------------------------------------------------------------------------
 Version: 1.3.1
 Date: 2023-09-02
   Changes:
@@ -21,24 +29,21 @@ Date: 2021-08-30
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.4
 Date: 2021-08-29
-  Changes:
+  Locale:
     - Added Brazilian Portuguese translation (thanks to @BM123499 (Bruno Melo) on crowdin)
     - Added Chinese Simplified translation (thanks to @Augn (forgetting_time) on crowdin)
-  Notes:
     - Translations: https://crowdin.com/project/factorio-mods-localization (thank you for contributions, I really appreciate it)
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.3
 Date: 2021-08-22
-  Changes:
+  Locale:
     - Added Polish translation (thanks to @CHOS3N on crowdin)
-  Notes:
     - Translations: https://crowdin.com/project/factorio-mods-localization (thank you for contributions, I really appreciate it)
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.2
 Date: 2021-08-01
-  Changes:
+  Locale:
     - Added Spanish translation (thanks to @josemirm on crowdin)
-  Notes:
     - Translations: https://crowdin.com/project/factorio-mods-localization (thank you for contributions, I really appreciate it)
 ---------------------------------------------------------------------------------------------------
 Version: 1.2.1
