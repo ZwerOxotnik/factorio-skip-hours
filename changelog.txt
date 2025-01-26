@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.4.1
+Date: 2025-01-26
+  Bugfixes:
+    - Fixed reasearch when there are no ingredients (https://mods.factorio.com/mod/skip-hours/discussion/677d0ec2b067402ff0e9073f)
+---------------------------------------------------------------------------------------------------
 Version: 1.4.0
 Date: 2024-10-24
   Changes:
